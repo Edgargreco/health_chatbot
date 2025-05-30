@@ -1,0 +1,2 @@
+# This file will list the project dependencies.
+nltk==3.9.1
