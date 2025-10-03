@@ -4,3 +4,5 @@ HealthBot Uganda leverages artificial intelligence, specifically natural languag
 The methodology employed a mixed-methods approach combining qualitative interviews, observational studies, and quantitative surveys with 50 participants from Wakiso District. The system was developed using Botpress as the core chatbot framework, integrated with HTML, CSS, and JavaScript for the web interface, and Node.js for backend processing.
 Results indicate that 88% of users found the system easy to use, with 70% preferring to interact in Luganda. The most popular features were symptom checking and emergency guidance. User feedback highlighted the system's potential to improve health decision-making in communities with limited healthcare access.
 This project contributes to Uganda's digital health initiatives and demonstrates the potential of AI-powered solutions in addressing healthcare challenges in developing countries. The system serves as a foundation for future enhancements and scalability to other regions and languages.
+
+FOR LIVE PREVIEW CLICK HERE https://edgargreco.github.io/health_chatbot/
