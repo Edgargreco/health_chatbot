@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login – HealthBot Uganda</title>
+    <meta name="description" content="Login to access HealthBot Uganda’s advanced AI-powered health information features.">
+    <link rel="icon" href="health_icon.ico" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        /* Tailwind CSS configuration */
+        :root {
+            --color-primary: #2563EB;
+            --color-secondary: #1E40AF;
+            --color-accent: #60A5FA;
+            --color-success: #10B981;
+            --color-warning: #F59E0B;
+            --color-danger: #EF4444;
+            --color-textColor: #1F2937;
+            --color-lightBg: #F8FAFC;
+            --color-cardBg: #FFFFFF;
+        }
+
+        .dark {
+            background-color: #111827;
+            color: #F3F4F6;
+        }
+
+        .dark .bg-white { background-color: #1F2937; }
+        .dark .bg-lightBg { background-color: #111827; }
+        .dark .text-textColor { color: #D1D5DB; }
+        .dark .text-gray-700 { color: #9CA3AF; }
+        .dark .text-gray-600 { color: #D1D5DB; }
+        .dark .text-gray-500 { color: #9CA3AF; }
+        .dark .border-gray-300 { border-color: #4B5563; }
+        .dark .border-gray-200 { border-color: #374151; }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+        }
+
+        .medical-pattern {
+            position: relative;
+            overflow: hidden; /* Ensure pattern doesn't bleed out */
+        }
+
+        .medical-pattern::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80"><path fill="%23FFFFFF" fill-opacity="0.05" d="M40 0 L50 10 L40 20 L30 10 Z M0 40 L10 50 L20 40 L10 30 Z M40 80 L50 70 L40 60 L30 70 Z M80 40 L70 50 L60 40 L70 30 Z"></path></svg>');
+            background-repeat: repeat;
+            opacity: 0.1;
+            pointer-events: none; /* Allow clicks to pass through */
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--color-primary);
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+
+        .focused label {
+            transform: translateY(-20px) scale(0.875);
+            color: var(--color-primary);
+        }
+
+        /* General input styling for consistency */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            transition: all 0.3s ease;
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25); /* Tailwind focus-ring-2 equivalent */
+        }
+    </style>
+</head>
+<body class="font-inter text-textColor bg-lightBg min-h-screen flex flex-col">
+    <!-- Navigation -->
+    <nav class="bg-white bg-opacity-95 backdrop-filter backdrop-blur-lg fixed w-full z-50 shadow-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                        <i class="fas fa-heartbeat text-white text-lg"></i>
+                    </div>
+                    <a href="index.html" class="text-primary font-bold text-xl">HealthBot Uganda</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="darkModeToggle" class="text-secondary hover:text-primary transition duration-300 p-2 rounded-full hover:bg-lightBg">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <a href="index.html" class="text-secondary hover:text-primary transition duration-300 font-medium">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="hero-gradient medical-pattern min-h-screen flex items-center justify-center pt-20 pb-10 flex-grow">
+        <div class="absolute inset-0 bg-black opacity-20"></div>
+
+        <!-- Floating medical icons -->
+        <div class="absolute top-20 left-10 text-white opacity-10 floating-element">
+            <i class="fas fa-stethoscope text-6xl"></i>
+        </div>
+        <div class="absolute bottom-20 right-10 text-white opacity-10 floating-element" style="animation-delay: -2s;">
+            <i class="fas fa-pills text-5xl"></i>
+        </div>
+        <div class="absolute top-1/2 left-20 text-white opacity-10 floating-element" style="animation-delay: -4s;">
+            <i class="fas fa-user-md text-4xl"></i>
+        </div>
+
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="max-w-md mx-auto">
+                <!-- Login Form -->
+                <div id="loginForm" class="bg-white rounded-2xl shadow-2xl p-8 fade-in-up">
+                    <div class="text-center mb-8">
+                        <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-user-md text-white text-2xl"></i>
+                        </div>
+                        <h1 class="text-2xl font-bold text-primary mb-2">Welcome Back</h1>
+                        <p class="text-gray-600">Sign in to access your HealthBot account</p>
+                    </div>
+
+                    <form id="loginFormElement" class="space-y-6">
+                       <div>
+    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+    <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-envelope text-gray-400"></i>
+        </div>
+        <input type="email" id="email" name="email" required
+            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition duration-300"
+            placeholder="Enter your email">
+    </div>
+</div>
+
+<div>
+    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+    <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-lock text-gray-400"></i>
+        </div>
+        <input type="password" id="password" name="password" required
+            class="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition duration-300"
+            placeholder="Enter your password">
+        <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+            <i class="fas fa-eye text-gray-400 hover:text-gray-600 cursor-pointer"></i>
+        </button>
+    </div>
+</div>
+
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="rememberMe" name="rememberMe"
+                                    class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                                <label for="rememberMe" class="ml-2 block text-sm text-gray-700">Remember me</label>
+                            </div>
+                            <a href="#" id="forgotPasswordLink" class="text-sm text-primary hover:text-secondary transition duration-300">
+                                Forgot password?
+                            </a>
+                        </div>
+
+                        <div id="errorMessage" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"></div>
+
+                        <button type="submit" id="loginButton"
+                            class="w-full bg-primary text-white font-semibold py-3 px-4 rounded-lg hover:bg-secondary transition duration-300 transform hover:-translate-y-1 flex items-center justify-center">
+                            <span id="loginButtonText">Sign In</span>
+                            <div id="loginSpinner" class="loading-spinner ml-2 hidden"></div>
+                        </button>
+                    </form>
+
+                    <div class="mt-8 text-center">
+                        <p class="text-gray-600">Don’t have an account?
+                            <a href="#" id="signUpLink" class="text-primary hover:text-secondary font-medium transition duration-300">
+                                Sign up here
+                            </a>
+                        </p>
+                        
+                    </div>
+                </div>
+
+                <!-- Registration Form -->
+                <div id="registrationForm" class="bg-white rounded-2xl shadow-2xl p-8 fade-in-up hidden">
+                    <div class="text-center mb-8">
+                        <div class="w-16 h-16 bg-success rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-user-plus text-white text-2xl"></i>
+                        </div>
+                        <h1 class="text-2xl font-bold text-success mb-2">Create Account</h1>
+                        <p class="text-gray-600">Join HealthBot Uganda community</p>
+                    </div>
+
+                    <form id="registrationFormElement" class="space-y-6">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                                <input type="text" id="firstName" name="firstName" required
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-success focus:border-success transition duration-300"
+                                    placeholder="Greco">
+                            </div>
+                            <div>
+                                <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" required
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-success focus:border-success transition duration-300"
+                                    placeholder="tech">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="regEmail" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                            <input type="email" id="regEmail" name="regEmail" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-success focus:border-success transition duration-300"
+                                placeholder="grecotech@example.com">
+                        </div>
+
+                        <div>
+                            <label for="regPassword" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                            <input type="password" id="regPassword" name="regPassword" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-success focus:border-success transition duration-300"
+                                placeholder="Create a strong password">
+                        </div>
+
+                        <div>
+                            <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-success focus:border-success transition duration-300"
+                                placeholder="Confirm your password">
+                        </div>
+
+                        <div class="flex items-center">
+                            <input type="checkbox" id="agreeTerms" name="agreeTerms" required
+                                class="h-4 w-4 text-success focus:ring-success border-gray-300 rounded">
+                            <label for="agreeTerms" class="ml-2 block text-sm text-gray-700">
+                                I agree to the <a href="#" class="text-primary hover:text-secondary">Terms of Service</a> and
+                                <a href="#" class="text-primary hover:text-secondary">Privacy Policy</a>
+                            </label>
+                        </div>
+
+                        <div id="regErrorMessage" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"></div>
+
+                        <button type="submit" id="registerButton"
+                            class="w-full bg-success text-white font-semibold py-3 px-4 rounded-lg hover:bg-green-600 transition duration-300 transform hover:-translate-y-1 flex items-center justify-center">
+                            <span id="registerButtonText">Create Account</span>
+                            <div id="registerSpinner" class="loading-spinner ml-2 hidden"></div>
+                        </button>
+                    </form>
+
+                    <div class="mt-8 text-center">
+                        <p class="text-gray-600">Already have an account?
+                            <a href="#" id="signInLink" class="text-primary hover:text-secondary font-medium transition duration-300">
+                                Sign in here
+                            </a>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Forgot Password Form -->
+                <div id="forgotPasswordForm" class="bg-white rounded-2xl shadow-2xl p-8 fade-in-up hidden">
+                    <div class="text-center mb-8">
+                        <div class="w-16 h-16 bg-warning rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-key text-white text-2xl"></i>
+                        </div>
+                        <h1 class="text-2xl font-bold text-warning mb-2">Reset Password</h1>
+                        <p class="text-gray-600">Enter your email to receive reset instructions</p>
+                    </div>
+
+                    <form id="forgotPasswordFormElement" class="space-y-6">
+                        <div>
+                            <label for="resetEmail" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                            <input type="email" id="resetEmail" name="resetEmail" required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-warning focus:border-warning transition duration-300"
+                                placeholder="Enter your email address">
+                        </div>
+
+                        <div id="resetErrorMessage" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"></div>
+
+                        <div id="resetSuccessMessage" class="hidden bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm"></div>
+
+                        <button type="submit" id="resetButton"
+                            class="w-full bg-warning text-white font-semibold py-3 px-4 rounded-lg hover:bg-yellow-600 transition duration-300 transform hover:-translate-y-1 flex items-center justify-center">
+                            <span id="resetButtonText">Send Reset Link</span>
+                            <div id="resetSpinner" class="loading-spinner ml-2 hidden"></div>
+                        </button>
+                    </form>
+
+                    <div class="mt-8 text-center">
+                        <a href="#" id="backToLoginLink" class="text-primary hover:text-secondary font-medium transition duration-300">
+                            <i class="fas fa-arrow-left mr-2"></i>Back to Sign In
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Success Message -->
+                <div id="successMessage" class="bg-white rounded-2xl shadow-2xl p-8 text-center hidden">
+                    <div class="w-16 h-16 bg-success rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-check text-white text-2xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-success mb-4">Welcome to HealthBot Uganda!</h2>
+                    <p class="text-gray-600 mb-6">You have successfully logged in. Redirecting to dashboard...</p>
+                    <div class="loading-spinner mx-auto"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 py-4 text-center text-sm">
+        <div class="container mx-auto px-4">
+            &copy; 2025 HealthBot Uganda. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Set Tailwind colors as CSS variables for use in vanilla CSS
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',
+                        secondary: '#1E40AF',
+                        accent: '#60A5FA',
+                        success: '#10B981',
+                        warning: '#F59E0B',
+                        danger: '#EF4444',
+                        textColor: '#1F2937',
+                        lightBg: '#F8FAFC',
+                        cardBg: '#FFFFFF',
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'poppins': ['Poppins', 'sans-serif'],
+                    },
+                },
+            },
+        };
+
+        class UserManager {
+            constructor() {
+                this.users = this.loadUsers();
+                this.currentUser = null;
+                this.initializeEventListeners();
+                this.initializeDarkMode();
+                this.checkSession();
+            }
+
+            // Loads a predefined set of demo users
+            loadUsers() {
+                const users = [
+                    {
+                        id: 1,
+                        firstName: 'Demo',
+                        lastName: 'User',
+                        email: 'demo@healthbot.ug',
+                        password: this.hashPassword('demo123'),
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 2,
+                        firstName: 'Health',
+                        lastName: 'Professional',
+                        email: 'health@healthbot.ug',
+                        password: this.hashPassword('health123'),
+                        createdAt: new Date().toISOString()
+                    }
+                ];
+                return users;
+            }
+
+            // A simple hashing function (for demo purposes, not secure for production)
+            hashPassword(password) {
+                let hash = 0;
+                for (let i = 0; i < password.length; i++) {
+                    const char = password.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash; // Convert to 32-bit integer
+                }
+                return hash.toString();
+            }
+
+            // Finds a user by email address (case-insensitive)
+            findUserByEmail(email) {
+                return this.users.find(user => user.email.toLowerCase() === email.toLowerCase());
+            }
+
+            // Validates a plain text password against a hashed password
+            validatePassword(plainPassword, hashedPassword) {
+                return this.hashPassword(plainPassword) === hashedPassword;
+            }
+
+            // Handles user login
+            async login(email, password, rememberMe = false) {
+                const user = this.findUserByEmail(email);
+                if (!user) {
+                    throw new Error('User not found');
+                }
+
+                if (!this.validatePassword(password, user.password)) {
+                    throw new Error('Invalid password');
+                }
+
+                this.currentUser = user;
+                const sessionData = {
+                    userId: user.id,
+                    email: user.email,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    loginTime: new Date().toISOString()
+                };
+
+                // Store session data in memory (since localStorage is not allowed)
+                window.healthbotSession = sessionData;
+
+                return user;
+            }
+
+            // Handles user registration
+            register(userData) {
+                const existingUser = this.findUserByEmail(userData.email);
+                if (existingUser) {
+                    throw new Error('User with this email already exists');
+                }
+
+                const newUser = {
+                    id: Date.now(),
+                    firstName: userData.firstName,
+                    lastName: userData.lastName,
+                    email: userData.email.toLowerCase(),
+                    password: this.hashPassword(userData.password),
+                    createdAt: new Date().toISOString()
+                };
+
+                this.users.push(newUser);
+                return newUser;
+            }
+
+            // Logs out the current user
+            logout() {
+                this.currentUser = null;
+                window.healthbotSession = null;
+            }
+
+            // Checks if a session exists and logs the user in if so
+            checkSession() {
+                if (window.healthbotSession) {
+                    const session = window.healthbotSession;
+                    const user = this.users.find(u => u.id === session.userId);
+                    if (user) {
+                        this.currentUser = user;
+                        // If already logged in, show success message
+                        setTimeout(() => {
+                            this.showSuccess(`Welcome back, ${user.firstName}!`);
+                            // Simulate redirection after success message
+                            setTimeout(() => {
+                                window.location.href = 'index.html'; // Redirect to index.html
+                            }, 2000);
+                        }, 500);
+                    }
+                }
+            }
+
+            // Initializes dark mode toggle functionality
+            initializeDarkMode() {
+                const darkModeToggle = document.getElementById('darkModeToggle');
+                let isDarkMode = false; // Initial state
+
+                darkModeToggle.addEventListener('click', () => {
+                    isDarkMode = !isDarkMode;
+                    document.body.classList.toggle('dark', isDarkMode);
+
+                    const icon = darkModeToggle.querySelector('i');
+                    if (isDarkMode) {
+                        icon.classList.remove('fa-moon');
+                        icon.classList.add('fa-sun');
+                    } else {
+                        icon.classList.remove('fa-sun');
+                        icon.classList.add('fa-moon');
+                    }
+                });
+            }
+
+            // Sets up event listeners for form submissions and form switching
+            initializeEventListeners() {
+                // Form submissions
+                document.getElementById('loginFormElement').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    await this.handleLogin();
+                });
+
+                document.getElementById('registrationFormElement').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    await this.handleRegistration();
+                });
+
+                document.getElementById('forgotPasswordFormElement').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    await this.handleForgotPassword();
+                });
+
+                // Form switching
+                document.getElementById('signUpLink').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showForm('registration');
+                });
+
+                document.getElementById('signInLink').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showForm('login');
+                });
+
+                document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showForm('forgotPassword');
+                });
+
+                document.getElementById('backToLoginLink').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showForm('login');
+                });
+
+                // Password toggle
+                document.getElementById('togglePassword').addEventListener('click', () => {
+                    this.togglePasswordVisibility();
+                });
+            }
+
+            // Handles the login process
+            async handleLogin() {
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const rememberMe = document.getElementById('rememberMe').checked;
+
+                this.setLoading('login', true);
+                this.hideError('login');
+
+                try {
+                    // Simulate API delay
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+
+                    const user = await this.login(email, password, rememberMe);
+                    this.showSuccess(`Welcome back, ${user.firstName}!`);
+
+                    setTimeout(() => {
+                        // In a real app, this would redirect to the actual dashboard
+                        // alert('Login successful! In a real application, you would be redirected to your dashboard.'); // Replaced alert
+                        // Display message in a temporary modal/message box
+                        this.showMessageBox('Login Successful!', 'You have successfully logged in. Redirecting to your dashboard.', 'success');
+                        window.location.href = 'index.html'; // Redirect to index.html
+                    }, 2000);
+
+                } catch (error) {
+                    this.showError('login', error.message);
+                    this.shakeForm('loginForm');
+                } finally {
+                    this.setLoading('login', false);
+                }
+            }
+
+            // Handles the registration process
+            async handleRegistration() {
+                const formData = {
+                    firstName: document.getElementById('firstName').value,
+                    lastName: document.getElementById('lastName').value,
+                    email: document.getElementById('regEmail').value,
+                    password: document.getElementById('regPassword').value
+                };
+
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                this.setLoading('register', true);
+                this.hideError('register');
+
+                try {
+                    // Validation
+                    if (formData.password !== confirmPassword) {
+                        throw new Error('Passwords do not match');
+                    }
+
+                    if (formData.password.length < 6) {
+                        throw new Error('Password must be at least 6 characters long');
+                    }
+
+                    // Simulate API delay
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+
+                    const user = this.register(formData);
+
+                    // Show success message
+                    setTimeout(() => {
+                        this.showMessageBox('Account Created!', `Welcome, ${user.firstName}! Your account has been created successfully.`, 'success');
+                        this.showForm('login');
+                        document.getElementById('email').value = formData.email; // Pre-fill login email
+                    }, 500);
+
+                } catch (error) {
+                    this.showError('register', error.message);
+                    this.shakeForm('registrationForm');
+                } finally {
+                    this.setLoading('register', false);
+                }
+            }
+
+            // Handles the forgot password process
+            async handleForgotPassword() {
+                const email = document.getElementById('resetEmail').value;
+
+                this.setLoading('reset', true);
+                this.hideError('reset');
+                this.hideSuccess('reset');
+
+                try {
+                    const user = this.findUserByEmail(email);
+                    if (!user) {
+                        throw new Error('No account found with this email address');
+                    }
+
+                    // Simulate API delay
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+
+                    this.showSuccess('reset', 'Password reset instructions have been sent to your email');
+
+                } catch (error) {
+                    this.showError('reset', error.message);
+                } finally {
+                    this.setLoading('reset', false);
+                }
+            }
+
+            // Displays the specified form and hides others
+            showForm(formType) {
+                const forms = ['loginForm', 'registrationForm', 'forgotPasswordForm', 'successMessage'];
+                forms.forEach(form => {
+                    document.getElementById(form).classList.add('hidden');
+                });
+
+                const targetForm = formType === 'login' ? 'loginForm' :
+                                   formType === 'registration' ? 'registrationForm' :
+                                   formType === 'forgotPassword' ? 'forgotPasswordForm' : 'loginForm';
+
+                document.getElementById(targetForm).classList.remove('hidden');
+
+                // Clear error messages when switching forms
+                this.hideError('login');
+                this.hideError('register');
+                this.hideError('reset');
+                this.hideSuccess('reset');
+
+                // Clear form inputs
+                if (formType === 'login') {
+                    document.getElementById('loginFormElement').reset();
+                } else if (formType === 'registration') {
+                    document.getElementById('registrationFormElement').reset();
+                } else if (formType === 'forgotPassword') {
+                    document.getElementById('forgotPasswordFormElement').reset();
+                }
+            }
+
+            // Manages loading states for buttons
+            setLoading(type, loading) {
+                const buttonId = type === 'login' ? 'loginButton' :
+                                 type === 'register' ? 'registerButton' : 'resetButton';
+                const textId = type === 'login' ? 'loginButtonText' :
+                               type === 'register' ? 'registerButtonText' : 'resetButtonText';
+                const spinnerId = type === 'login' ? 'loginSpinner' :
+                                  type === 'register' ? 'registerSpinner' : 'resetSpinner';
+
+                const button = document.getElementById(buttonId);
+                const text = document.getElementById(textId);
+                const spinner = document.getElementById(spinnerId);
+
+                if (loading) {
+                    button.disabled = true;
+                    button.classList.add('opacity-75', 'cursor-not-allowed');
+                    text.classList.add('hidden'); // Hide text
+                    spinner.classList.remove('hidden');
+                } else {
+                    button.disabled = false;
+                    button.classList.remove('opacity-75', 'cursor-not-allowed');
+                    text.classList.remove('hidden'); // Show text
+                    spinner.classList.add('hidden');
+                }
+            }
+
+            // Displays an error message for a specific form
+            showError(type, message) {
+                const errorId = type === 'login' ? 'errorMessage' :
+                                type === 'register' ? 'regErrorMessage' : 'resetErrorMessage';
+                const errorElement = document.getElementById(errorId);
+                errorElement.textContent = message;
+                errorElement.classList.remove('hidden');
+            }
+
+            // Hides an error message for a specific form
+            hideError(type) {
+                const errorId = type === 'login' ? 'errorMessage' :
+                                type === 'register' ? 'regErrorMessage' : 'resetErrorMessage';
+                const errorElement = document.getElementById(errorId);
+                if (errorElement) {
+                    errorElement.classList.add('hidden');
+                    errorElement.textContent = ''; // Clear content
+                }
+            }
+
+            // Shows a success message (either for reset or general login)
+            showSuccess(type, message = null) {
+                if (type === 'reset') {
+                    const successElement = document.getElementById('resetSuccessMessage');
+                    successElement.textContent = message;
+                    successElement.classList.remove('hidden');
+                } else {
+                    // Show main success form
+                    document.getElementById('loginForm').classList.add('hidden');
+                    document.getElementById('registrationForm').classList.add('hidden');
+                    document.getElementById('forgotPasswordForm').classList.add('hidden');
+                    document.getElementById('successMessage').classList.remove('hidden');
+                    if (message) {
+                        document.querySelector('#successMessage h2').textContent = message;
+                    }
+                }
+            }
+
+            // Hides a success message (only for reset currently)
+            hideSuccess(type) {
+                if (type === 'reset') {
+                    const successElement = document.getElementById('resetSuccessMessage');
+                    if (successElement) {
+                        successElement.classList.add('hidden');
+                        successElement.textContent = ''; // Clear content
+                    }
+                }
+            }
+
+            // Adds a shake animation to a form element
+            shakeForm(formId) {
+                const form = document.getElementById(formId);
+                if (form) {
+                    form.classList.add('shake');
+                    setTimeout(() => {
+                        form.classList.remove('shake');
+                    }, 500);
+                }
+            }
+
+            // Toggles password input visibility
+            togglePasswordVisibility() {
+                const passwordInput = document.getElementById('password');
+                const toggleIcon = document.querySelector('#togglePassword i');
+
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggleIcon.classList.remove('fa-eye');
+                    toggleIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    toggleIcon.classList.remove('fa-eye-slash');
+                    toggleIcon.classList.add('fa-eye');
+                }
+            }
+
+            // Custom message box instead of alert
+            showMessageBox(title, message, type = 'info') {
+                let iconClass = '';
+                let bgColorClass = '';
+                let textColorClass = '';
+
+                switch (type) {
+                    case 'success':
+                        iconClass = 'fas fa-check-circle';
+                        bgColorClass = 'bg-green-100 border-green-400';
+                        textColorClass = 'text-green-700';
+                        break;
+                    case 'error':
+                        iconClass = 'fas fa-times-circle';
+                        bgColorClass = 'bg-red-100 border-red-400';
+                        textColorClass = 'text-red-700';
+                        break;
+                    case 'warning':
+                        iconClass = 'fas fa-exclamation-triangle';
+                        bgColorClass = 'bg-yellow-100 border-yellow-400';
+                        textColorClass = 'text-yellow-700';
+                        break;
+                    default:
+                        iconClass = 'fas fa-info-circle';
+                        bgColorClass = 'bg-blue-100 border-blue-400';
+                        textColorClass = 'text-blue-700';
+                }
+
+                const messageBoxHtml = `
+                    <div id="messageBoxOverlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
+                        <div class="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4 transform transition-all scale-100 opacity-100 ${bgColorClass} border-t-4">
+                            <div class="flex items-center mb-4">
+                                <i class="${iconClass} text-2xl mr-3 ${textColorClass}"></i>
+                                <h3 class="text-lg font-bold ${textColorClass}">${title}</h3>
+                            </div>
+                            <p class="text-gray-700 mb-6">${message}</p>
+                            <div class="flex justify-end">
+                                <button id="messageBoxClose" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-secondary transition duration-200">
+                                    OK
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.body.insertAdjacentHTML('beforeend', messageBoxHtml);
+
+                document.getElementById('messageBoxClose').addEventListener('click', () => {
+                    const overlay = document.getElementById('messageBoxOverlay');
+                    if (overlay) {
+                        overlay.remove();
+                    }
+                });
+            }
+        }
+
+        class FormEnhancer {
+            constructor() {
+                this.initializeValidation();
+                this.initializeInputEnhancements();
+            }
+
+            // Initializes real-time validation for email and password fields
+            initializeValidation() {
+                // Real-time email validation
+                const emailInputs = ['email', 'regEmail', 'resetEmail'];
+                emailInputs.forEach(id => {
+                    const input = document.getElementById(id);
+                    if (input) {
+                        input.addEventListener('blur', () => this.validateEmail(input));
+                        input.addEventListener('input', () => this.clearValidationState(input));
+                    }
+                });
+
+                // Real-time password validation
+                const passwordInput = document.getElementById('regPassword');
+                const confirmPasswordInput = document.getElementById('confirmPassword');
+
+                if (passwordInput) {
+                    passwordInput.addEventListener('input', () =>
+                        this.validatePassword(passwordInput)
+                    );
+                }
+
+                if (confirmPasswordInput) {
+                    confirmPasswordInput.addEventListener('input', () => {
+                        this.validatePasswordMatch(passwordInput, confirmPasswordInput);
+                    });
+                }
+            }
+
+            // Adds floating label and initial focus effects to inputs
+            initializeInputEnhancements() {
+                // Add floating label effect
+                const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]');
+                inputs.forEach(input => {
+                    const label = input.parentElement.previousElementSibling; // Assuming label is sibling of parent div
+
+                    // Ensure there's a label to move
+                    if (label && label.tagName === 'LABEL') {
+                        // Position the input relative to its container to allow absolute positioning of label
+                        input.parentElement.style.position = 'relative';
+
+                        // Create a wrapper div for the label and input to make 'focused' class easier to apply
+                        const wrapper = document.createElement('div');
+                        wrapper.classList.add('relative'); // Add relative positioning to wrapper
+                        input.parentElement.replaceWith(wrapper); // Replace the original parent
+                        wrapper.appendChild(label); // Move label into new wrapper
+                        wrapper.appendChild(input.parentElement); // Move original input parent into new wrapper
+
+                        label.style.transition = 'all 0.2s ease-out';
+                        label.style.position = 'absolute';
+                        label.style.left = '10px';
+                        label.style.top = '14px'; // Align with input
+                        label.style.pointerEvents = 'none'; // Allow clicking through label to input
+                        label.style.zIndex = '1'; // Ensure label is above input when floating
+                        label.style.backgroundColor = 'transparent'; // Ensure background is transparent
+
+                        const adjustLabel = () => {
+                            if (input.value || input === document.activeElement) {
+                                label.style.transform = 'translateY(-20px) scale(0.875)';
+                                label.style.color = 'var(--color-primary)';
+                                label.style.top = '0px'; // Move label up further
+                                label.style.left = '8px'; // Adjust horizontal position
+                                label.style.backgroundColor = 'var(--color-cardBg)'; // Add background to label for contrast
+                                label.style.padding = '0 4px';
+                            } else {
+                                label.style.transform = 'translateY(0) scale(1)';
+                                label.style.color = '#4B5563'; /* default gray */
+                                label.style.top = '14px';
+                                label.style.left = '10px';
+                                label.style.backgroundColor = 'transparent';
+                                label.style.padding = '0';
+                            }
+                        };
+
+                        input.addEventListener('focus', adjustLabel);
+                        input.addEventListener('blur', adjustLabel);
+                        input.addEventListener('input', adjustLabel);
+
+                        // Adjust on load if already filled (e.g., by browser autofill)
+                        adjustLabel();
+                    }
+                });
+            }
+
+
+            // Validates email input format
+            validateEmail(input) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const isValid = emailRegex.test(input.value);
+
+                if (input.value && !isValid) {
+                    this.showFieldError(input, 'Please enter a valid email address');
+                    return false;
+                } else {
+                    this.showFieldSuccess(input);
+                    return true;
+                }
+            }
+
+            // Validates password strength (minimum length)
+            validatePassword(input) {
+                const password = input.value;
+                const minLength = 6;
+
+                if (password.length > 0 && password.length < minLength) {
+                    this.showFieldError(input, `Password must be at least ${minLength} characters long`);
+                    return false;
+                } else if (password.length >= minLength) {
+                    this.showFieldSuccess(input);
+                    return true;
+                }
+
+                this.clearValidationState(input);
+                return true;
+            }
+
+            // Validates if two password fields match
+            validatePasswordMatch(passwordInput, confirmPasswordInput) {
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+
+                if (confirmPassword.length > 0 && password !== confirmPassword) {
+                    this.showFieldError(confirmPasswordInput, 'Passwords do not match');
+                    return false;
+                } else if (confirmPassword.length > 0 && password === confirmPassword) {
+                    this.showFieldSuccess(confirmPasswordInput);
+                    return true;
+                }
+
+                this.clearValidationState(confirmPasswordInput);
+                return true;
+            }
+
+            // Displays a field-specific error message
+            showFieldError(input, message) {
+                input.classList.remove('border-gray-300', 'border-green-500');
+                input.classList.add('border-red-500');
+
+                // Remove existing error message
+                const existingError = input.parentElement.querySelector('.field-error');
+                if (existingError) {
+                    existingError.remove();
+                }
+
+                // Add error message
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'field-error text-red-500 text-xs mt-1';
+                errorDiv.textContent = message;
+                input.parentElement.appendChild(errorDiv);
+            }
+
+            // Displays a field-specific success indicator
+            showFieldSuccess(input) {
+                input.classList.remove('border-gray-300', 'border-red-500');
+                input.classList.add('border-green-500');
+
+                // Remove existing error message
+                const existingError = input.parentElement.querySelector('.field-error');
+                if (existingError) {
+                    existingError.remove();
+                }
+            }
+
+            // Clears validation state and messages for a field
+            clearValidationState(input) {
+                input.classList.remove('border-red-500', 'border-green-500');
+                input.classList.add('border-gray-300');
+
+                // Remove existing error message
+                const existingError = input.parentElement.querySelector('.field-error');
+                if (existingError) {
+                    existingError.remove();
+                }
+            }
+        }
+
+        class AccessibilityManager {
+            constructor() {
+                this.initializeAccessibility();
+            }
+
+            // Initializes accessibility features
+            initializeAccessibility() {
+                this.addKeyboardNavigation();
+                this.addAriaLabels();
+                this.addFocusManagement();
+            }
+
+            // Adds keyboard navigation enhancements
+            addKeyboardNavigation() {
+                // Allow Enter key to submit forms
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        const activeElement = document.activeElement;
+                        const form = activeElement.closest('form');
+
+                        if (form && activeElement.tagName !== 'BUTTON') {
+                            e.preventDefault();
+                            const submitButton = form.querySelector('button[type="submit"]');
+                            if (submitButton && !submitButton.disabled) {
+                                submitButton.click();
+                            }
+                        }
+                    }
+                });
+
+                // Add Escape key to close modals/forms (if any were implemented)
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        // You can add modal closing logic here if needed
+                    }
+                });
+            }
+
+            // Adds ARIA labels and descriptions for better screen reader support
+            addAriaLabels() {
+                // Add aria-describedby for form inputs
+                const emailInput = document.getElementById('email');
+                const passwordInput = document.getElementById('password');
+
+                if (emailInput) {
+                    emailInput.setAttribute('aria-describedby', 'email-help');
+                    if (!document.getElementById('email-help')) {
+                        const helpDiv = document.createElement('div');
+                        helpDiv.id = 'email-help';
+                        helpDiv.className = 'sr-only';
+                        helpDiv.textContent = 'Enter your registered email address';
+                        emailInput.parentElement.appendChild(helpDiv);
+                    }
+                }
+
+                if (passwordInput) {
+                    passwordInput.setAttribute('aria-describedby', 'password-help');
+                    if (!document.getElementById('password-help')) {
+                        const helpDiv = document.createElement('div');
+                        helpDiv.id = 'password-help';
+                        helpDiv.className = 'sr-only';
+                        helpDiv.textContent = 'Enter your account password';
+                        passwordInput.parentElement.appendChild(helpDiv);
+                    }
+                }
+                // Add ARIA labels to password toggle button
+                const togglePasswordButton = document.getElementById('togglePassword');
+                if (togglePasswordButton) {
+                    togglePasswordButton.setAttribute('aria-label', 'Toggle password visibility');
+                }
+            }
+
+            // Manages focus when forms are shown/hidden
+            addFocusManagement() {
+                // Focus first input when forms are shown
+                const observer = new MutationObserver((mutations) => {
+                    mutations.forEach((mutation) => {
+                        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                            const target = mutation.target;
+                            if (!target.classList.contains('hidden')) {
+                                const firstInput = target.querySelector('input:not([type="checkbox"]):not([type="hidden"])');
+                                if (firstInput) {
+                                    setTimeout(() => firstInput.focus(), 100);
+                                }
+                            }
+                        }
+                    });
+                });
+
+                // Observe form visibility changes
+                const forms = ['loginForm', 'registrationForm', 'forgotPasswordForm'];
+                forms.forEach(formId => {
+                    const form = document.getElementById(formId);
+                    if (form) {
+                        observer.observe(form, { attributes: true });
+                    }
+                });
+            }
+        }
+
+        class UIEffects {
+            constructor() {
+                this.initializeEffects();
+            }
+
+            // Initializes UI animation and enhancement effects
+            initializeEffects() {
+                this.addParallaxEffect();
+                this.addTypingEffect();
+                this.addProgressiveEnhancement();
+            }
+
+            // Adds a parallax effect to floating elements based on scroll position
+            addParallaxEffect() {
+                window.addEventListener('scroll', () => {
+                    const scrolled = window.pageYOffset;
+                    const parallaxElements = document.querySelectorAll('.floating-element');
+
+                    parallaxElements.forEach((element, index) => {
+                        // Different speeds for a more dynamic effect
+                        const speed = 0.5 + (index * 0.1);
+                        element.style.transform = `translateY(${scrolled * speed}px)`;
+                    });
+                });
+            }
+
+            // Adds a subtle typing/pulse effect to demo credentials
+            addTypingEffect() {
+                const demoText = document.querySelector('.mt-4.text-sm.text-gray-500');
+                if (demoText) {
+                    demoText.addEventListener('mouseenter', () => {
+                        demoText.classList.add('animate-pulse');
+                    });
+
+                    demoText.addEventListener('mouseleave', () => {
+                        demoText.classList.remove('animate-pulse');
+                    });
+                }
+            }
+
+            // Adds smooth transitions and hover effects
+            addProgressiveEnhancement() {
+                // Add smooth transitions to form elements
+                const formElements = document.querySelectorAll('input, button, select');
+                formElements.forEach(element => {
+                    if (!element.style.transition) {
+                        element.style.transition = 'all 0.3s ease';
+                    }
+                });
+
+                // Add hover effects to interactive elements
+                const interactiveElements = document.querySelectorAll('a, button, input[type="checkbox"]');
+                interactiveElements.forEach(element => {
+                    element.addEventListener('mouseenter', () => {
+                        element.style.transform = 'scale(1.02)';
+                    });
+
+                    element.addEventListener('mouseleave', () => {
+                        element.style.transform = 'scale(1)';
+                    });
+                });
+            }
+        }
+
+        class PerformanceMonitor {
+            constructor() {
+                this.initializeMonitoring();
+            }
+
+            // Initializes performance monitoring
+            initializeMonitoring() {
+                // Monitor page load performance
+                window.addEventListener('load', () => {
+                    const perfData = performance.getEntriesByType('navigation')[0];
+                    if (perfData) {
+                        console.log('Page Load Performance:');
+                        console.log(`- DNS Lookup: ${perfData.domainLookupEnd - perfData.domainLookupStart}ms`);
+                        console.log(`- Connection: ${perfData.connectEnd - perfData.connectStart}ms`);
+                        console.log(`- Response: ${perfData.responseEnd - perfData.responseStart}ms`);
+                        console.log(`- DOM Load: ${perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart}ms`);
+                        console.log(`- Total Load: ${perfData.loadEventEnd - perfData.loadEventStart}ms`);
+                    }
+                });
+
+                // Monitor memory usage (if available in the browser)
+                if ('memory' in performance) {
+                    setInterval(() => {
+                        const memory = performance.memory;
+                        console.log(`Memory Usage: ${(memory.usedJSHeapSize / 1048576).toFixed(2)} MB`);
+                    }, 30000); // Log every 30 seconds
+                }
+            }
+        }
+
+        class ErrorHandler {
+            constructor() {
+                this.initializeErrorHandling();
+            }
+
+            // Initializes global error handling
+            initializeErrorHandling() {
+                // Global JavaScript error handler
+                window.addEventListener('error', (event) => {
+                    this.logError('JavaScript Error', event.error);
+                });
+
+                // Unhandled promise rejection handler
+                window.addEventListener('unhandledrejection', (event) => {
+                    this.logError('Unhandled Promise Rejection', event.reason);
+                });
+
+                // Network error handler
+                this.monitorNetworkErrors();
+            }
+
+            // Logs error information
+            logError(type, error) {
+                const errorInfo = {
+                    type: type,
+                    message: error.message || error,
+                    stack: error.stack,
+                    timestamp: new Date().toISOString(),
+                    userAgent: navigator.userAgent,
+                    url: window.location.href
+                };
+
+                console.error('HealthBot Error:', errorInfo);
+
+                // In a real application, you would send this to your error tracking service
+                // Example: sendToErrorTrackingService(errorInfo);
+            }
+
+            // Monitors network request failures
+            monitorNetworkErrors() {
+                const originalFetch = window.fetch;
+                window.fetch = async (...args) => {
+                    try {
+                        const response = await originalFetch(...args);
+                        if (!response.ok) {
+                            this.logError('Network Error', {
+                                message: `HTTP ${response.status}: ${response.statusText}`,
+                                url: args[0]
+                            });
+                        }
+                        return response;
+                    } catch (error) {
+                        this.logError('Fetch Error', error);
+                        throw error;
+                    }
+                };
+            }
+        }
+
+        // Initialize all managers and handlers when the DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            const userManager = new UserManager();
+            const formEnhancer = new FormEnhancer();
+            const accessibilityManager = new AccessibilityManager();
+            const uiEffects = new UIEffects();
+            const performanceMonitor = new PerformanceMonitor();
+            const errorHandler = new ErrorHandler();
+
+            // Add global reference for debugging
+            window.healthbotManagers = {
+                userManager,
+                formEnhancer,
+                accessibilityManager,
+                uiEffects,
+                performanceMonitor,
+                errorHandler
+            };
+
+            console.log('HealthBot Uganda Login System Initialized');
+            console.log('Demo Credentials:');
+            console.log('Email: demo@healthbot.ug');
+            console.log('Password: demo123');
+            console.log('---');
+            console.log('Email: health@healthbot.ug');
+            console.log('Password: health123');
+        });
+    </script>
+</body>
+</html>

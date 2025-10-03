@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthBot Uganda - AI-Powered Health Information Assistant</title>
+    <meta name="description" content="HealthBot Uganda provides AI-powered health information assistance with reliable, instant, and accessible health-related information. A Bachelor of IT project from Ndejje University.">
+    <link rel="icon" href="health_icon.ico" type="image/x-icon">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="main.css">
+   
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://healthbot-uganda.com/">
+    <meta property="og:title" content="HealthBot Uganda - AI-Powered Health Information Assistant">
+    <meta property="og:description" content="Access reliable, instant health information through our AI-powered chatbot. Developed as a Bachelor of IT project at Ndejje University.">
+    <meta property="og:image" content="https://healthbot-uganda.com/og-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://healthbot-uganda.com/">
+    <meta property="twitter:title" content="HealthBot Uganda - AI-Powered Health Information Assistant">
+    <meta property="twitter:description" content="Access reliable, instant health information through our AI-powered chatbot. Developed as a Bachelor of IT project at Ndejje University.">
+    <meta property="twitter:image" content="https://healthbot-uganda.com/twitter-image.jpg">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',        // Medical Blue
+                        secondary: '#1E40AF',      // Darker Blue
+                        accent: '#60A5FA',         // Light Blue
+                        success: '#10B981',        // Medical Green
+                        warning: '#F59E0B',        // Medical Orange
+                        danger: '#EF4444',         // Medical Red
+                        textColor: '#1F2937',      // Dark Gray
+                        lightBg: '#F8FAFC',        // Very Light Blue
+                        cardBg: '#FFFFFF',         // Pure White
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'poppins': ['Poppins', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        /* Basic dark mode styles (can be expanded in main.css) */
+        .dark {
+            background-color: #111827; /* Dark Gray */
+            color: #F3F4F6; /* Light Gray */
+        }
+        .dark nav {
+            background-color: rgba(17, 24, 39, 0.95); /* Darker nav background */
+            border-bottom-color: #374151;
+        }
+        .dark #mobileMenu {
+            background-color: #111827;
+            border-top-color: #374151;
+        }
+        .dark .text-secondary, .dark .text-textColor {
+            color: #D1D5DB; /* Lighter text for dark mode */
+        }
+        .dark .hover\:text-primary:hover {
+            color: #60A5FA; /* Lighter primary for hover */
+        }
+        .dark .bg-white { background-color: #1F2937; /* Dark card background */ }
+        .dark .bg-lightBg { background-color: #111827; /* Darker lightBg */ }
+        .dark .text-gray-700 { color: #9CA3AF; }
+        .dark .text-gray-600 { color: #D1D5DB; }
+        .dark .text-primary { color: #60A5FA; } /* Lighter primary for dark text */
+        .dark .shadow-lg, .dark .shadow-xl, .dark .shadow-2xl { box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3), 0 4px 6px -2px rgba(0,0,0,0.25); }
+        .dark .border-gray-800 { border-color: #374151; }
+        .dark .text-gray-400 { color: #9CA3AF; }
+        .dark .text-gray-500 { color: #6B7280; }
+        .dark .bg-gray-900 { background-color: #030712; } /* Even darker footer */
+        .dark .bg-gray-800 { background-color: #1F2937; }
+        .dark .hero-gradient { background: linear-gradient(135deg, #1E40AF 0%, #111827 100%); }
+        .dark .medical-pattern::before { opacity: 0.03; }
+        .dark #chatbotContainer section { background: linear-gradient(to bottom right, #1E40AF, #1F2937); }
+        .dark #chatbotContainer .bg-white { background-color: #1F2937; } /* Chatbot intro card dark */
+        .dark #chatbotContainer .text-primary { color: #60A5FA; }
+        .dark #chatbotContainer .text-gray-600 { color: #9CA3AF; }
+        .dark #chatbotContainer .text-gray-700 { color: #D1D5DB; }
+        .dark #chatbotContainer .bg-lightBg { background-color: #374151; } /* Disclaimer bg dark */
+
+        /* Add any styles from your main.css here if it's not linked properly for snippet execution */
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--tw-gradient-stops));
+            --tw-gradient-from: #2563EB; /* primary */
+            --tw-gradient-to: #60A5FA;   /* accent */
+        }
+        .medical-pattern {
+            position: relative;
+        }
+        .medical-pattern::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80"><path fill="%23FFFFFF" fill-opacity="0.05" d="M40 0 L50 10 L40 20 L30 10 Z M0 40 L10 50 L20 40 L10 30 Z M40 80 L50 70 L40 60 L30 70 Z M80 40 L70 50 L60 40 L70 30 Z"></path></svg>');
+            background-repeat: repeat;
+            opacity: 0.1;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .floating { animation: float 3s ease-in-out infinite; }
+        @keyframes pulse-animation {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } /* success color */
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        .pulse-animation { animation: pulse-animation 2s infinite; }
+
+    </style>
+</head>
+<body class="font-inter text-textColor overflow-x-hidden bg-lightBg">
+    <nav class="bg-white bg-opacity-95 backdrop-filter backdrop-blur-lg fixed w-full z-50 shadow-sm" aria-label="Main navigation">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                        <i class="fas fa-heartbeat text-white text-lg"></i>
+                    </div>
+                    <a href="#" class="text-primary font-bold text-xl" aria-label="HealthBot Uganda Home">HealthBot Uganda</a>
+                </div>
+                <div class="hidden md:flex space-x-6" role="navigation">
+                    <a href="#home" class="text-secondary font-medium hover:text-primary transition duration-300 border-b-2 border-transparent hover:border-primary" aria-current="page">Home</a>
+                    <a href="#about" class="text-secondary font-medium hover:text-primary transition duration-300 border-b-2 border-transparent hover:border-primary">About</a>
+                    <a href="#objectives" class="text-secondary font-medium hover:text-primary transition duration-300 border-b-2 border-transparent hover:border-primary">Objectives</a>
+                    <a href="#features" class="text-secondary font-medium hover:text-primary transition duration-300 border-b-2 border-transparent hover:border-primary">Features</a>
+                    <a href="#chatbot" class="text-secondary font-medium hover:text-primary transition duration-300 border-b-2 border-transparent hover:border-primary">Try HealthBot</a>
+					<a href="login.html" class="text-secondary font-medium hover:text-primary transition duration-300 border-b-2 border-transparent hover:border-primary">login</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="darkModeToggle" class="text-secondary hover:text-primary transition duration-300 p-2 rounded-full hover:bg-lightBg" aria-label="Toggle dark mode">
+                        <i class="fas fa-moon" aria-hidden="true"></i>
+                    </button>
+                    <button id="mobileMenuButton" class="md:hidden text-secondary hover:text-primary transition duration-300 p-2" aria-label="Toggle mobile menu" aria-expanded="false" aria-controls="mobileMenu">
+                        <i class="fas fa-bars" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-t px-4 py-4" role="navigation" aria-label="Mobile navigation">
+            <a href="#home" class="block py-3 text-secondary font-medium hover:text-primary transition duration-300">Home</a>
+            <a href="#about" class="block py-3 text-secondary font-medium hover:text-primary transition duration-300">About</a>
+            <a href="#objectives" class="block py-3 text-secondary font-medium hover:text-primary transition duration-300">Objectives</a>
+            <a href="#features" class="block py-3 text-secondary font-medium hover:text-primary transition duration-300">Features</a>
+            <a href="#chatbot" class="block py-3 text-secondary font-medium hover:text-primary transition duration-300">Try HealthBot</a>
+			
+        </div>
+    </nav>
+
+    <section id="home" class="hero-gradient medical-pattern min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
+        <div class="absolute inset-0 bg-black opacity-20"></div>
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <div class="floating mb-8">
+                <div class="w-24 h-24 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-user-md text-4xl text-white"></i>
+                </div>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">AI-Powered Health Information Assistant</h1>
+            <p class="text-xl md:text-2xl text-white opacity-90 mb-8 max-w-3xl mx-auto leading-relaxed">Get reliable, instant, and accessible health information through our intelligent chatbot - designed for Uganda's diverse healthcare needs</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="#chatbot" class="bg-white text-primary font-semibold py-4 px-8 rounded-full hover:bg-accent hover:text-white transition duration-300 transform hover:-translate-y-1 hover:shadow-xl">
+                    <i class="fas fa-comments mr-2"></i>Try HealthBot Now
+                </a>
+                <a href="#about" class="border-2 border-white text-white font-semibold py-4 px-8 rounded-full hover:bg-white hover:text-primary transition duration-300 transform hover:-translate-y-1">
+                    Learn More
+                </a>
+            </div>
+            <div class="mt-12 text-white opacity-75">
+                <p class="text-sm">Bachelor of Information Technology Project</p>
+                <p class="text-sm font-semibold">Ndejje University - Faculty of Science and Computing</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl md:text-5xl font-bold text-primary mb-8">About HealthBot Uganda</h2>
+                <div class="w-24 h-1 bg-primary mx-auto mb-8"></div>
+                <p class="text-lg md:text-xl leading-relaxed text-gray-700 mb-8">
+                    HealthBot Uganda is an innovative AI-powered health information chatbot developed to address the growing demand for reliable, accessible healthcare information in Uganda. In today's digital age, many people seek health information online but often encounter unreliable or complex sources that can lead to confusion and anxiety.
+                </p>
+                <p class="text-lg md:text-xl leading-relaxed text-gray-700 mb-12">
+                    Our chatbot leverages advanced natural language processing (NLP) and machine learning technologies to provide immediate, accurate responses to health inquiries through interactive conversations, making healthcare information more accessible for everyone.
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-lightBg rounded-xl p-6 hover:shadow-lg transition duration-300">
+                        <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-graduation-cap text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-primary mb-2">Academic Excellence</h3>
+                        <p class="text-gray-600">Developed as part of Bachelor of IT requirements at Ndejje University</p>
+                    </div>
+                    <div class="bg-lightBg rounded-xl p-6 hover:shadow-lg transition duration-300">
+                        <div class="w-16 h-16 bg-success rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-globe-africa text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-success mb-2">Uganda-Focused</h3>
+                        <p class="text-gray-600">Designed with local languages and culturally relevant health content</p>
+                    </div>
+                    <div class="bg-lightBg rounded-xl p-6 hover:shadow-lg transition duration-300">
+                        <div class="w-16 h-16 bg-warning rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-robot text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-warning mb-2">AI-Powered</h3>
+                        <p class="text-gray-600">Advanced NLP and machine learning for accurate health information</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="objectives" class="py-20 bg-lightBg">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-5xl font-bold text-primary text-center mb-8">Project Objectives</h2>
+            <div class="w-24 h-1 bg-primary mx-auto mb-16"></div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                <div class="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
+                            <span class="text-white font-bold text-lg">1</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-primary mb-3">Literature Review & User Requirements</h3>
+                            <p class="text-gray-700 leading-relaxed">Conducted comprehensive literature review and field study done to identify user requirements and information needs for an AI-powered health information chatbot specifically tailored for Uganda.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-success rounded-full flex items-center justify-center flex-shrink-0">
+                            <span class="text-white font-bold text-lg">2</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-success mb-3">Design & Cultural Adaptation</h3>
+                            <p class="text-gray-700 leading-relaxed">Chatbot is designed with features suited to address health information gaps, including natural language processing for local languages and culturally relevant content.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-warning rounded-full flex items-center justify-center flex-shrink-0">
+                            <span class="text-white font-bold text-lg">3</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-warning mb-3">Development & Implementation</h3>
+                            <p class="text-gray-700 leading-relaxed">The Developed and implemented health information chatbot uses advanced AI and machine learning techniques to ensure accurate, real-time responses to users' health inquiries.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition duration-300">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-danger rounded-full flex items-center justify-center flex-shrink-0">
+                            <span class="text-white font-bold text-lg">4</span>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-danger mb-3">Testing & Validation</h3>
+                            <p class="text-gray-700 leading-relaxed">Tested and validated where the chatbot's performance and usability in providing accurate health information, with pilot testing was conducted across different regions in Uganda.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-5xl font-bold text-primary text-center mb-8">Key Features</h2>
+            <div class="w-24 h-1 bg-primary mx-auto mb-16"></div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div class="bg-lightBg rounded-xl p-8 hover:shadow-xl transition duration-300 transform hover:-translate-y-2">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-stethoscope text-white text-2xl"></i>
+                    </div>
+                    <h4 class="text-xl font-semibold text-primary mb-4 text-center">Symptom Analysis</h4>
+                    <p class="text-gray-700 text-center leading-relaxed">Get preliminary information about symptoms and when to seek professional medical care through intelligent analysis.</p>
+                </div>
+
+                <div class="bg-lightBg rounded-xl p-8 hover:shadow-xl transition duration-300 transform hover:-translate-y-2">
+                    <div class="w-16 h-16 bg-success rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-pills text-white text-2xl"></i>
+                    </div>
+                    <h4 class="text-xl font-semibold text-success mb-4 text-center">Medication Information</h4>
+                    <p class="text-gray-700 text-center leading-relaxed">Access reliable information about common medications, their uses, and general safety guidelines.</p>
+                </div>
+
+                <div class="bg-lightBg rounded-xl p-8 hover:shadow-xl transition duration-300 transform hover:-translate-y-2">
+                    <div class="w-16 h-16 bg-warning rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-language text-white text-2xl"></i>
+                    </div>
+                    <h4 class="text-xl font-semibold text-warning mb-4 text-center">Local Language Support</h4>
+                    <p class="text-gray-700 text-center leading-relaxed">Communicate in local Ugandan languages for better accessibility and understanding of health information.</p>
+                </div>
+
+                <div class="bg-lightBg rounded-xl p-8 hover:shadow-xl transition duration-300 transform hover:-translate-y-2">
+                    <div class="w-16 h-16 bg-danger rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-shield-alt text-white text-2xl"></i>
+                    </div>
+                    <h4 class="text-xl font-semibold text-danger mb-4 text-center">Prevention & Wellness</h4>
+                    <p class="text-gray-700 text-center leading-relaxed">Learn about disease prevention, healthy lifestyle choices, and wellness practices tailored for Uganda.</p>
+                </div>
+
+                <div class="bg-lightBg rounded-xl p-8 hover:shadow-xl transition duration-300 transform hover:-translate-y-2">
+                    <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-hospital text-white text-2xl"></i>
+                    </div>
+                    <h4 class="text-xl font-semibold text-primary mb-4 text-center">Healthcare Resources</h4>
+                    <p class="text-gray-700 text-center leading-relaxed">Find information about healthcare facilities, emergency contacts, and medical services in Uganda.</p>
+                </div>
+
+                <div class="bg-lightBg rounded-xl p-8 hover:shadow-xl transition duration-300 transform hover:-translate-y-2">
+                    <div class="w-16 h-16 bg-success rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-clock text-white text-2xl"></i>
+                    </div>
+                    <h4 class="text-xl font-semibold text-success mb-4 text-center">24/7 Availability</h4>
+                    <p class="text-gray-700 text-center leading-relaxed">Access health information anytime, anywhere, ensuring continuous support for your health inquiries.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="chatbotContainer" aria-live="polite">
+        <section id="chatbot" class="py-20 bg-gradient-to-br from-primary to-secondary">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Try HealthBot Uganda</h2>
+                    <p class="text-xl text-white opacity-90 max-w-2xl mx-auto leading-relaxed">Experience our AI-powered health information assistant. Ask questions about symptoms, medications, wellness, and more. The chatbot will appear as a button, typically in the corner of your screen.</p>
+                </div>
+                
+                <div class="flex items-center justify-center">
+                    <div class="w-full max-w-4xl">
+                        <div class="bg-white rounded-2xl shadow-2xl p-6 mb-6">
+                            <div class="flex items-center space-x-4 mb-4">
+                                <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
+                                    <i class="fas fa-robot text-white text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-primary">HealthBot Assistant</h3>
+                                    <p class="text-gray-600">Your AI-powered health information companion</p>
+                                </div>
+                                <div class="ml-auto">
+                                    <span class="bg-success text-white px-3 py-1 rounded-full text-sm pulse-animation">Online</span>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-lightBg rounded-xl p-4 mb-4">
+                                <p class="text-gray-700 text-sm">
+                                    <strong>Disclaimer:</strong> This chatbot provides general health information for educational purposes only. It is not a substitute for professional medical advice, diagnosis, or treatment. Always consult with qualified healthcare providers for medical concerns.
+                                </p>
+                            </div>
+                            <p class="text-center text-gray-700 mt-6">
+                                Click the chat icon the bottom right corner	to start your conversation with HealthBot.
+                            </p>
+                        </div>
+                        
+                        <!-- The Botpress chat widget will be injected by its script, typically as a floating button.
+                             The placeholder iframe and its container have been removed. -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="bg-gray-900 py-12 text-white">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                            <i class="fas fa-heartbeat text-white"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">HealthBot Uganda</h3>
+                    </div>
+                    <p class="text-gray-400 leading-relaxed">AI-powered health information assistant designed to provide reliable, accessible healthcare information for Uganda's diverse population.</p>
+                </div>
+                
+                
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Important Notice</h4>
+                    <div class="bg-gray-800 rounded-lg p-4">
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            This chatbot is for educational and informational purposes only. It does not replace professional medical advice. Always consult healthcare providers for medical concerns.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 pt-8 text-center">
+                <p class="text-gray-400">© 2025 HealthBot Uganda - Bachelor of IT Project, Ndejje University. All rights reserved.</p>
+                <p class="text-gray-500 text-sm mt-2">Developed as part of academic requirements for the Faculty of Science and Computing</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Your Botpress Chatbot Scripts -->
+    
+    <script src="https://cdn.botpress.cloud/webchat/v3.0/inject.js"></script>
+<script src="https://files.bpcontent.cloud/2025/06/07/16/20250607163352-76GQK2VK.js"></script>
+    
+    <!-- End Botpress Chatbot Scripts -->
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+            mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+        });
+
+        // Dark mode toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const currentTheme = localStorage.getItem('theme');
+
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark');
+                darkModeToggle.querySelector('i').classList.remove('fa-moon');
+                darkModeToggle.querySelector('i').classList.add('fa-sun');
+            } else {
+                document.body.classList.remove('dark');
+                darkModeToggle.querySelector('i').classList.remove('fa-sun');
+                darkModeToggle.querySelector('i').classList.add('fa-moon');
+            }
+        }
+
+        if (currentTheme) {
+            applyTheme(currentTheme);
+        } else if (userPrefersDark) {
+            applyTheme('dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+             applyTheme('light'); // Default to light if no preference
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            let theme = document.body.classList.contains('dark') ? 'light' : 'dark';
+            localStorage.setItem('theme', theme);
+            applyTheme(theme);
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    // Close mobile menu if open and clicking a nav link
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                        mobileMenuButton.setAttribute('aria-expanded', 'false');
+                    }
+
+                    // Adjust for fixed header height if necessary
+                    const headerOffset = document.querySelector('nav').offsetHeight;
+                    const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                    const offsetPosition = elementPosition - headerOffset;
+        
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Add scroll effect to navigation (optional, as backdrop-filter is already there)
+        // window.addEventListener('scroll', () => {
+        //     const nav = document.querySelector('nav');
+        //     if (window.scrollY > 50) { // Reduced threshold
+        //         nav.classList.add('shadow-md'); // Tailwind class for a bit more shadow
+        //     } else {
+        //         nav.classList.remove('shadow-md');
+        //     }
+        // });
+    </script>
+
+</body>
+</html>
